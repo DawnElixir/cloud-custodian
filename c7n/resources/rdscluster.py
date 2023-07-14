@@ -170,9 +170,18 @@ class Delete(BaseAction):
         for cluster in clusters:
             if delete_instances:
                 for instance in cluster.get('DBClusterMembers', []):
-                    client.delete_db_instance(
-                        DBInstanceIdentifier=instance['DBInstanceIdentifier'],
-                        SkipFinalSnapshot=True)
+                    try:
+                        client.delete_db_instance(
+                            DBInstanceIdentifier=instance['DBInstanceIdentifier'],
+                            SkipFinalSnapshot=True)
+                    except ClientError as e:
+                        if e.response['Error']['Code'] == "InvalidDBInstanceState":
+                        continue
+                        if e.response['Error']['Code'] == "InvalidParameterValue":
+                        self.log.warning(
+                            "Delete failed, DBInstance %s has invalid parameter value",
+                            instance['DBInstanceIdentifier'])
+                    continue
                     self.log.info(
                         'Deleted RDS instance: %s',
                         instance['DBInstanceIdentifier'])
@@ -187,7 +196,7 @@ class Delete(BaseAction):
             _run_cluster_method(
                 client.delete_db_cluster, params,
                 (client.exceptions.DBClusterNotFoundFault, client.exceptions.ResourceNotFoundFault),
-                client.exceptions.InvalidDBClusterStateFault)
+                client.exceptions.InvalidDBClusterStateFault, client.exceptions.InvalidParameterValue)
 
 
 @RDSCluster.action_registry.register('retention')
