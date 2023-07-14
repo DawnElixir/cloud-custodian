@@ -196,7 +196,7 @@ class Delete(BaseAction):
             _run_cluster_method(
                 client.delete_db_cluster, params,
                 (client.exceptions.DBClusterNotFoundFault, client.exceptions.ResourceNotFoundFault),
-                client.exceptions.InvalidDBClusterStateFault, client.exceptions.InvalidParameterValue)
+                client.exceptions.InvalidDBClusterStateFault)
 
 
 @RDSCluster.action_registry.register('retention')
