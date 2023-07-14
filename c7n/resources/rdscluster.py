@@ -179,12 +179,12 @@ class Delete(BaseAction):
                         instance['DBInstanceIdentifier'])
                     except ClientError as e:
                         if e.response['Error']['Code'] == "InvalidDBInstanceState":
-                        continue
+                            continue
                         if e.response['Error']['Code'] == "InvalidParameterValue":
-                        self.log.warning(
-                            "Delete failed, DBInstance %s has invalid parameter value",
-                            instance['DBInstanceIdentifier'])
-                        continue
+                            self.log.warning(
+                                "Delete failed, DBInstance %s has invalid parameter value",
+                                instance['DBInstanceIdentifier'])
+                            continue
 
             params = {'DBClusterIdentifier': cluster['DBClusterIdentifier']}
             if skip:
