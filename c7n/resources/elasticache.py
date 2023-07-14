@@ -144,7 +144,13 @@ class DeleteElastiCacheCluster(BaseAction):
             else:
                 self.log.debug(
                     "Skipping final snapshot of %s", cluster['CacheClusterId'])
-            client.delete_cache_cluster(**params)
+            try:
+                client.delete_cache_cluster(**params)
+            except ClientError as e:
+                self.log.warning(
+                        "Delete failed, CacheCluster %s delete failed",
+                        cluster['CacheClusterId'])
+                continue
             self.log.info(
                 'Deleted ElastiCache cluster: %s',
                 cluster['CacheClusterId'])
@@ -369,7 +375,13 @@ class DeleteElastiCacheSnapshot(BaseAction):
 
     def process_snapshot_set(self, client, snapshots_set):
         for s in snapshots_set:
-            client.delete_snapshot(SnapshotName=s['SnapshotName'])
+            try:
+                client.delete_snapshot(SnapshotName=s['SnapshotName'])
+            except ClientError as e:
+                self.log.warning(
+                        "Delete snapshot failed, snapshot %s delete failed",
+                        SnapshotName=s['SnapshotName'])
+                continue
 
 
 @ElastiCacheSnapshot.action_registry.register('copy-cluster-tags')
