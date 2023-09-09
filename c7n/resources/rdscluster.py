@@ -177,7 +177,7 @@ class Delete(BaseAction):
                         self.log.info(
                         'Deleted RDS instance: %s',
                         instance['DBInstanceIdentifier'])
-                    except client.exceptions:
+                    except client.exceptions.InvalidDBInstanceStateFault:
                         self.log.info(
                         'Delete failed for RDS instance: %s',
                         instance['DBInstanceIdentifier'])
