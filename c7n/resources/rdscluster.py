@@ -177,14 +177,12 @@ class Delete(BaseAction):
                         self.log.info(
                         'Deleted RDS instance: %s',
                         instance['DBInstanceIdentifier'])
-                    except ClientError as e:
-                        if e.response['Error']['Code'] == "InvalidDBInstanceState":
-                            continue
-                        if e.response['Error']['Code'] == "InvalidParameterValue":
-                            self.log.warning(
-                                "Delete failed, DBInstance %s has invalid parameter value",
-                                instance['DBInstanceIdentifier'])
-                            continue
+                    except (client.exceptions.InvalidDBInstanceState,
+                             client.exceptions.InvalidParameterValue):
+                        self.log.info(
+                        'Delete failed for RDS instance: %s',
+                        instance['DBInstanceIdentifier'])
+                        continue
 
             params = {'DBClusterIdentifier': cluster['DBClusterIdentifier']}
             if skip:
