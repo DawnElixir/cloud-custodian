@@ -26,7 +26,7 @@ class SessionFactory:
         self.profile = profile
         self.assume_role = assume_role
         self.external_id = external_id
-        self.session_name = "CloudCustodian"
+        self.session_name = "AccountResourceManager"
         if 'C7N_SESSION_SUFFIX' in os.environ:
             self.session_name = "%s@%s" % (
                 self.session_name, os.environ['C7N_SESSION_SUFFIX'])
@@ -54,7 +54,7 @@ class SessionFactory:
         session._session.user_agent_name = "c7n"
         session._session.user_agent_version = version
         if self._policy_name:
-            session._session.user_agent_extra = f"c7n/policy#{self._policy_name}"
+            session._session.user_agent_extra = f"ARM/policy#{self._policy_name}"
 
         for s in self._subscribers:
             s(session)
