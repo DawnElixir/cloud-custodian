@@ -618,7 +618,7 @@ class TagDelayedAction(Action):
     batch_size = 200
     concurrency = 2
 
-    default_template = 'Resource does not meet policy: {op}@{action_date}'
+    default_template = 'Marked by ARM: {op}@{action_date}'
 
     def get_permissions(self):
         return self.manager.action_registry['tag'].permissions
