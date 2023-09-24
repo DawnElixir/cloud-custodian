@@ -363,7 +363,7 @@ class LogFile(LogOutput):
     @property
     def log_path(self):
         return os.path.join(
-            self.ctx.log_dir, 'custodian-run.log')
+            self.ctx.log_dir, 'arm-run.log')
 
     def get_handler(self):
         return logging.FileHandler(self.log_path)
